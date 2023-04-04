@@ -6,8 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>圖片轉WebP小工具</title>
   <style>
+    @font-face {
+      font-family: 'Cubic';
+      font-display: fallback;
+      src: url('../../font/Cubic.woff2');
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Cubic", Arial, sans-serif;
       background-color: #f8f8f8;
       color: #333;
       margin: 0;
@@ -20,6 +26,7 @@
       padding: 20px;
       margin: 0;
       text-align: center;
+      letter-spacing: 5px;
     }
 
     p {
@@ -104,13 +111,7 @@
 </head>
 
 <body>
-  <h1>圖片轉WebP小工具</h1>
-  <p class="select-files-button-container">
-    <label>
-      <input type="file" id="inputFile" accept="image/*" multiple style="display: none;">
-      <span class="button" id="selectFilesButton">選擇圖片檔案</span>
-    </label>
-  </p>
+  <h1>圖片轉 WebP 小工具</h1>
   <div class="slider-container">
     <label for="resolutionScale">解析度：</label>
     <input type="range" id="resolutionScale" min="0.1" max="2" step="0.01" value="1">
@@ -120,8 +121,13 @@
     <label for="compressionQuality">壓縮品質：</label>
     <input type="range" id="compressionQuality" min="0" max="100" step="1" value="80">
     <span class="value" id="compressionValue">0.80</span>
-
   </div>
+  <p class="select-files-button-container">
+    <label>
+      <input type="file" id="inputFile" accept="image/*" multiple style="display: none;">
+      <span class="button" id="selectFilesButton">選擇圖片檔案</span>
+    </label>
+  </p>
   <div id="result"></div>
   <p id="download">
     <span class="button" id="downloadButton">下載轉換完成的檔案</span>
