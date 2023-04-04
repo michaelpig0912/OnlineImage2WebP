@@ -5,7 +5,7 @@ WebP 是一種由 Google 開發的圖像檔案格式，使用 WebP 可以減少�
 <font size=4pt>**[點我前往WebP小工具ヾ(•ω•`)o](https://michaelpig0912.github.io/sideProject/image2WebP/image2WebP.html)**</font>
 
 ## 如何使用
-![使用說明]([https://user-images.githubusercontent.com/39875566/229829990-c675b3ac-5f88-4a04-9b97-c40c6163e632.png](https://user-images.githubusercontent.com/39875566/229898609-fc89af6a-2705-4900-bbcc-b7046eaf18b0.png)
+![使用說明](https://user-images.githubusercontent.com/39875566/229898609-fc89af6a-2705-4900-bbcc-b7046eaf18b0.png)
 使用這個小工具非常簡單，只需要依照以下步驟：
 1. 先設定圖像轉換後的「解析度」和「壓縮品質」。
 
