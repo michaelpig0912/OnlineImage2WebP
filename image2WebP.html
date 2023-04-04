@@ -156,7 +156,7 @@
     });
 
     document.getElementById("resolutionScale").addEventListener("input", function() {
-      document.getElementById("resolutionValue").textContent = this.value;
+      document.getElementById("resolutionValue").textContent = (this.value/100*100).toFixed(2);
     });
 
     document.getElementById("compressionQuality").addEventListener("input", function() {
