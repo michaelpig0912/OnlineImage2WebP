@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>圖片轉WebP小工具</title>
   <style>
-
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f8f8;
@@ -77,6 +76,7 @@
       border-radius: 5px;
       cursor: pointer;
       font-size: 20px;
+      border: 0px;
     }
 
     #result {
@@ -104,6 +104,12 @@
     p.select-files-button-container {
       text-align: center;
     }
+
+    .button.disabled {
+    background-color: #AAA;
+    cursor: not-allowed;
+    border: 0px;
+    }
   </style>
 </head>
 
@@ -127,12 +133,18 @@
   </p>
   <div id="result"></div>
   <p id="download">
-    <span class="button" id="downloadButton">下載轉換完成的檔案</span>
+    <button class="button" id="downloadButton" disabled>下載轉換完成的檔案</button>
 
   </p>
   <script src="jszip.min.js"></script>
 
   <script>
+  // 初始化按鈕
+  document.addEventListener("DOMContentLoaded", () => {
+  const mainDownloadButton = document.getElementById("downloadButton");
+  mainDownloadButton.disabled = true;
+  mainDownloadButton.classList.add("disabled");
+});
     // 初始化 JSZip 實例
     const zip = new JSZip();
 
@@ -153,10 +165,8 @@
 
     document.getElementById("downloadButton").addEventListener("click", async () => {
       if (zip.files.length === 0) {
-        alert("尚無轉換完成的圖檔！");
         return;
       }
-
       const zipBlob = await zip.generateAsync({
         type: "blob"
       });
@@ -171,6 +181,7 @@
       document.body.removeChild(downloadLink);
       URL.revokeObjectURL(url);
     });
+
 
     async function handleFileSelect(event) {
       const files = event.target.files;
@@ -251,11 +262,17 @@
         downloadButton.href = URL.createObjectURL(blob);
         downloadButton.download = `${fileName}.webp`;
       });
+      const mainDownloadButton = document.getElementById("downloadButton");
+      mainDownloadButton.disabled = false;
+      mainDownloadButton.classList.remove("disabled");
     }
 
     function clearResults() {
       const resultDiv = document.getElementById("result");
       resultDiv.innerHTML = ""; // 清除 resultDiv 的內容
+      const mainDownloadButton = document.getElementById("downloadButton");
+      mainDownloadButton.disabled = true;
+      mainDownloadButton.classList.add("disabled");
     }
   </script>
 
