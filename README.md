@@ -5,7 +5,7 @@ WebP is an image file format developed by Google. Using WebP can reduce the file
 <font size=4pt>**[Click me to go to the WebP tool ヾ(•ω•`)o](https://michaelpig0912.github.io/sideProject/image2WebP/image2WebP.html)**</font>
 
 ## how to use
-![Instructions for use](https://user-images.githubusercontent.com/39875566/229898609-fc89af6a-2705-4900-bbcc-b7046eaf18b0.png)
+![Instructions for use](https://user-images.githubusercontent.com/39875566/230153171-d7200227-b142-411b-a14e-9bf3172510b5.png)
 Using this widget is very easy, just follow these steps:
 1. First set the "resolution" and "compression quality" after image conversion.
 
