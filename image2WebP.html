@@ -6,8 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>圖片轉WebP小工具</title>
   <style>
+    @font-face {
+      font-family: 'Cubic';
+      font-display: fallback;
+      src: url('../../font/Cubic.woff2');
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Cubic", Arial, sans-serif;
       background-color: #f8f8f8;
       color: #333;
       margin: 0;
@@ -68,6 +74,7 @@
     }
 
     .button {
+
       display: inline-block;
       padding: 10px;
       background-color: #4CAF50;
@@ -77,6 +84,9 @@
       cursor: pointer;
       font-size: 20px;
       border: 0px;
+    }
+    #downloadButton{
+      font-family: "Cubic", Arial, sans-serif;
     }
 
     #result {
@@ -106,6 +116,7 @@
     }
 
     .button.disabled {
+    font-family: "Cubic", Arial, sans-serif;
     background-color: #AAA;
     cursor: not-allowed;
     border: 0px;
@@ -115,9 +126,15 @@
 
 <body>
   <h1>圖片轉 WebP 小工具</h1>
+  <p class="select-files-button-container">
+    <label>
+      <input type="file" id="inputFile" accept="image/*" multiple style="display: none;">
+      <span class="button" id="selectFilesButton">選擇圖片檔案</span>
+    </label>
+  </p>
   <div class="slider-container">
     <label for="resolutionScale">解析度：</label>
-    <input type="range" id="resolutionScale" min="0.1" max="2" step="0.01" value="1">
+    <input type="range" id="resolutionScale" min="0.01" max="1.2" step="0.01" value="1">
     <span class="value" id="resolutionValue">1.00</span>
   </div>
   <div class="slider-container">
@@ -125,12 +142,6 @@
     <input type="range" id="compressionQuality" min="0" max="100" step="1" value="80">
     <span class="value" id="compressionValue">0.80</span>
   </div>
-  <p class="select-files-button-container">
-    <label>
-      <input type="file" id="inputFile" accept="image/*" multiple style="display: none;">
-      <span class="button" id="selectFilesButton">選擇圖片檔案</span>
-    </label>
-  </p>
   <div id="result"></div>
   <p id="download">
     <button class="button" id="downloadButton" disabled>下載轉換完成的檔案</button>
@@ -147,6 +158,8 @@
 });
     // 初始化 JSZip 實例
     const zip = new JSZip();
+    const cachedResults = new Map(); // 儲存已轉換的檔案
+    const debouncedUpdateResults = debounce(updateResults, 300); // 300毫秒的延遲
 
     document.getElementById("inputFile").addEventListener("change", handleFileSelect);
     document.getElementById("selectFilesButton").addEventListener("click", () => {
@@ -155,12 +168,14 @@
       clearResults(); // 清除之前的結果
     });
 
-    document.getElementById("resolutionScale").addEventListener("input", function() {
-      document.getElementById("resolutionValue").textContent = (this.value/100*100).toFixed(2);
+    document.getElementById("resolutionScale").addEventListener("input", function () {
+      document.getElementById("resolutionValue").textContent = (this.value / 100 * 100).toFixed(2);
+      debouncedUpdateResults(); // 更新結果
     });
 
-    document.getElementById("compressionQuality").addEventListener("input", function() {
+    document.getElementById("compressionQuality").addEventListener("input", function () {
       document.getElementById("compressionValue").textContent = (this.value / 100).toFixed(2);
+      debouncedUpdateResults(); // 更新結果
     });
 
     document.getElementById("downloadButton").addEventListener("click", async () => {
@@ -193,8 +208,36 @@
           width,
           height
         } = await convertToWebP(file);
+        cachedResults.set(file, { blob, width, height }); // 儲存已轉換的檔案
         showResult(blob, fileName, width, height);
       }
+    }
+
+    async function updateResults() {
+      clearResults(); // 清除之前的結果
+      zip.remove(/.*/); // 移除之前 ZIP 檔案內的檔案
+
+      for (const [file, result] of cachedResults.entries()) {
+        const fileName = file.name.split(".").slice(0, -1).join(".");
+        const {
+          blob,
+          width,
+          height
+        } = await convertToWebP(file);
+        showResult(blob, fileName, width, height);
+      }
+    }
+
+    function debounce(func, wait) {
+      let timeout;
+      return (...args) => {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
     }
 
     async function convertToWebP(file) {
