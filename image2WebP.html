@@ -6,9 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>圖片轉WebP小工具</title>
   <style>
+    @font-face {
+      font-family: 'Cubic';
+      font-display: fallback;
+      src: url('../../font/Cubic.woff2');
+    }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Cubic", Arial, sans-serif;
       background-color: #f8f8f8;
       color: #333;
       margin: 0;
@@ -111,7 +116,7 @@
     }
 
     .button.disabled {
-    font-family: Arial, sans-serif;
+    font-family: "Cubic", Arial, sans-serif;
     background-color: #AAA;
     cursor: not-allowed;
     border: 0px;
@@ -160,7 +165,6 @@
     document.getElementById("selectFilesButton").addEventListener("click", () => {
       const inputFile = document.getElementById("inputFile");
       inputFile.value = ""; // 重置 inputFile 的值
-      clearResults(); // 清除之前的結果
     });
 
     document.getElementById("resolutionScale").addEventListener("input", function () {
@@ -196,15 +200,25 @@
     async function handleFileSelect(event) {
       const files = event.target.files;
 
+      if (files.length === 0) {
+        return;
+      }
+
       for (const file of files) {
         const fileName = file.name.split(".").slice(0, -1).join(".");
-        const {
-          blob,
-          width,
-          height
-        } = await convertToWebP(file);
-        cachedResults.set(file, { blob, width, height }); // 儲存已轉換的檔案
-        showResult(blob, fileName, width, height);
+
+        if (!cachedResults.has(file)) {
+          const {
+            blob,
+            width,
+            height
+          } = await convertToWebP(file);
+          cachedResults.set(file, { blob, width, height }); // 儲存已轉換的檔案
+          showResult(blob, fileName, width, height);
+        } else {
+          const { blob, width, height } = cachedResults.get(file);
+          showResult(blob, fileName, width, height);
+        }
       }
     }
 
